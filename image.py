@@ -4,10 +4,6 @@
 ##
 ##  This script demonstrates how to read/write image using OpenCV 3
 ##  and showcases some common image operations.
-##  
-##  Library functions used:
-##      - imread()
-##      - imwrite()
 ##
 ##  Created on October 4, 2017 by Animesh Mishra
 ##  Copyright (c) 2017 Animesh Ltd. All Rights Reserved
@@ -31,7 +27,7 @@ class ReadMode(IntEnum):
 # format, even if the file is grayscale. BGR is same as RGB but the byte
 # order is reversed. imread() discards any alpha channel by default, to 
 # preserve transparency use cv2.IMREAD_UNCHANGED flag. 
-grayImage = cv2.imread("Untitled.jpg", ReadMode.Grayscale)
+grayImage = cv2.imread("assets/Untitled.jpg", ReadMode.Grayscale)
 
 # Display the grayscale image in a window titled "Vision"
 cv2.imshow("Vision", grayImage)
@@ -42,7 +38,7 @@ key = cv2.waitKey(0)
 if key == 27:
     cv2.destroyAllWindows()
 elif key == ord("s"):
-    cv2.imwrite("GrayUntitled.png", grayImage)
+    cv2.imwrite("assets/GrayUntitled.png", grayImage)
     cv2.destroyAllWindows()
 
 ##
@@ -68,8 +64,8 @@ flatNumpyArray = numpy.array(randomByteArray)
 
 # Convert the array to make a 400 x 300 grayscale image
 randomGrayImage = flatNumpyArray.reshape(300, 400)
-cv2.imwrite("RandomGray.png", randomGrayImage)
+cv2.imwrite("assets/RandomGray.png", randomGrayImage)
 
 # Convert the array to make a 400 x 100 colour image
 randomBGRImage = flatNumpyArray.reshape(100, 400, 3)
-cv2.imwrite("RandomBGR.png", randomBGRImage)
+cv2.imwrite("assets/RandomBGR.png", randomBGRImage)
