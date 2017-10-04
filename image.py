@@ -31,5 +31,14 @@ class ReadMode(IntEnum):
 # preserve transparency use cv2.IMREAD_UNCHANGED flag. 
 grayImage = cv2.imread("Untitled.jpg", ReadMode.Grayscale)
 
-# Write an image to disk. The image must be in BGR or Grayscale format.
-cv2.imwrite("GrayUntitled.png", grayImage)
+# Display the grayscale image in a window titled "Vision"
+cv2.imshow("Vision", grayImage)
+# Record key press
+key = cv2.waitKey(0)
+# Close the window if ESC key (27) is pressed, otherwise if the 'S' key
+# is pressed, save the grayscale image to disk and then close the window.
+if key == 27:
+    cv2.destroyAllWindows()
+elif key == ord("s"):
+    cv2.imwrite("GrayUntitled.png", grayImage)
+    cv2.destroyAllWindows()
