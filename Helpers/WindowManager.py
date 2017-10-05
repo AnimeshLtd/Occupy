@@ -1,10 +1,12 @@
 ##
-##  CaptureManager.py
+##  WindowManager.py
 ##  Occu.py
 ##
 ##  Created on October 4, 2017 by Animesh Mishra
 ##  Copyright (c) 2017 Animesh Ltd. All Rights Reserved
 ##
+
+import cv2
 
 class WindowManager(object):
     """

@@ -1,6 +1,6 @@
 ##
 ##  CaptureManager.py
-##  Vision
+##  Occu.py
 ##
 ##  Created on October 4, 2017 by Animesh Mishra
 ##  Copyright (c) 2017 Animesh Ltd. All Rights Reserved
@@ -40,13 +40,14 @@ class CaptureManager(object):
         self._capture       = capture
         self._channel       = 0
         self._enteredFrame  = False
+        self._frame         = None
         self._imageFileName = None
         self._videoFileName = None
         self._videoEncoding = None
         self._videoWriter   = None
 
         self._startTime     = None
-        self._framesElapsed = long(0)
+        self._framesElapsed = int(0)
         self._fpsEstimate   = None
 
     @property
@@ -62,7 +63,7 @@ class CaptureManager(object):
     @property
     def frame(self):
         if self._enteredFrame and self._frame is None:
-            _, self._frame = self._capture.retrieve(channel = self.channel)
+            _, self._frame = self._capture.retrieve(self.channel)
         return self._frame
 
     @property
