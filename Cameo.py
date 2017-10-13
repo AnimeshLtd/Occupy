@@ -1,6 +1,6 @@
 ##
-##  cameo.py
-##  Occu.py - Cameo
+##  Cameo.py
+##  Occu.py
 ##
 ##  Created on October 4, 2017 by Animesh Mishra
 ##  Copyright (c) 2017 Animesh Ltd. All Rights Reserved
