@@ -37,7 +37,7 @@ def createCurveFunc(points):
     else:
         kind = "cubic"      # cubic spline interpolation
 
-    return scipy.interpolate.interpld(arrayX, arrayY, kind, bounds_error = False)
+    return scipy.interpolate.interp1d(arrayX, arrayY, kind, bounds_error = False)
 
 def createCompositeFunc(func0, func1):
     """
