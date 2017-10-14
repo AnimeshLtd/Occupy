@@ -60,6 +60,29 @@ def recolourCMV(source, destination):
     cv2.max(maximum, red, blue)
     cv2.merge((blue, green, red), destination)
 
+def strokeEdges(source, destination, blurKernelSize = 7, edgeKernelSize = 5):
+    """
+    Blur the image using medianBlur(), effective in removing digital video noise, especially
+    in colour images. Then convert image from BGR to greyscale.
+    
+    For edge-finding, use Laplacian(), produces bold edge lines especially in greyscale image.
+    Once we have the edges, we invert the image to get black edges on white background. Then,
+    we normalise the image and multiply it with the source image to darken the edges.
+    """
+    if blurKernelSize >= 3:
+        blurredSource = cv2.medianBlur(source, blurKernelSize)
+        greySource = cv2.cvtColor(blurredSource, cv2.COLOR_BGR2GRAY)
+    else:
+        greySource = cv2.cvtColor(blurredSource, cv2.COLOR_BGR2GRAY)
+    
+    cv2.Laplacian(greySource, cv2.CV_8U, greySource, ksize = edgeKernelSize)
+    normalisedInverseAlpha = (1.0 / 255) * (255 - greySource)
+    channels = cv2.split(source)
+    for channel in channels:
+        channel[:] = channel * normalisedInverseAlpha
+    
+    cv2.merge(channels, destination)
+
 # ******************************************************************************************************************* #
 
 ## Filter classes
@@ -119,6 +142,63 @@ class BGRCurveFilter(BGRFuncFilter):
                                      Utilities.createCurveFunc(gPoints),
                                      Utilities.createCurveFunc(rPoints),
                                      dataType)
+
+class VConvolutionFilter(object):
+    """
+    A filter that applies a convolution to the either the value channel (in greyscale) or
+    all of BGR.
+    """
+    def __init__(self, kernel):
+        self._kernel = kernel
+
+    def apply(self, source, destination):
+        """
+        Apply the filter with a BGR or grey source/destination
+        """
+        cv2.filter2D(source, -1, self._kernel, destination)
+
+class SharpenFilter(VConvolutionFilter):
+    """
+    A sharpen filter with a 1-pixel radius.
+    """
+    def __init__(self):
+        kernel = numpy.array([[-1, -1, -1],
+                              [-1,  9, -1],
+                              [-1, -1, -1]])
+        VConvolutionFilter.__init__(self, kernel)
+
+class FindEdgesFilter(VConvolutionFilter):
+    """
+    An edge-finding filter with a 1-pixel radius
+    """
+    def __init__(self):
+        kernel = numpy.array([[-1, -1, -1],
+                              [-1,  8, -1],
+                              [-1, -1, -1]])
+        VConvolutionFilter.__init__(self, kernel)
+
+class BlurFilter(VConvolutionFilter):
+    """
+    A blur filter with a 2-pixel radius
+    """
+    def __init__(self):
+        kernel = numpy.array([[0.04, 0.04, 0.04, 0.04, 0.04],
+                              [0.04, 0.04, 0.04, 0.04, 0.04],
+                              [0.04, 0.04, 0.04, 0.04, 0.04],
+                              [0.04, 0.04, 0.04, 0.04, 0.04],
+                              [0.04, 0.04, 0.04, 0.04, 0.04]])
+        VConvolutionFilter.__init__(self, kernel)
+
+class EmbossFilter(VConvolutionFilter):
+    """
+    An emboss filter with a 1-pixel radius
+    """
+    def __init__(self):
+        kernel = numpy.array([[-2, -1, 0],
+                              [-1,  1, 1],
+                              [ 0,  1, 2]])
+        VConvolutionFilter.__init__(self, kernel)
+    
 
 # ******************************************************************************************************************* #
 
